@@ -15,7 +15,7 @@ canvasEl.width = window.innerWidth;
 canvasEl.height = window.innerHeight;
 const canvas = canvasEl.getContext("2d");
 
-const socket = io("https://sala-voice.vercel.app/");
+const socket = io("");
 
 const client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" })
 
