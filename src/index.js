@@ -105,6 +105,7 @@ async function main() {
     };
 
     players.push({
+      voiceId: Math.floor(Math.random() * 1000000),
       id: socket.id,
       x: 800,
       y: 800,

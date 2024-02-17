@@ -26,7 +26,9 @@ const localTracks = {
 let isPlaying = true
 
 const remoteUsers = {};
+window.remoteUsers = remoteUsers
 const muteButton = document.getElementById("mute");
+const uid = Math.floor(Math.random() * 1000000)
 
 muteButton.addEventListener("click", () => {
   if (isPlaying) {
@@ -45,7 +47,7 @@ muteButton.addEventListener("click", () => {
 const options = {
   appid: "94d21a0f8650491e989caa2a020f988c",
   channel: 'school',
-  uid: null,
+  uid,
   token: null
 }
 
@@ -68,15 +70,15 @@ function handleUserUnpublished(user) {
 }
 
 async function join() {
-  //socket.emit("voiceId", uid);
+  socket.emit("voiceId", uid);
 
   client.on("user-published", handleUserPublished);
   client.on("user-unpublished", handleUserUnpublished);
 
-  [options.uid, localTracks.audioTrack] = await Promise.all([
-    client.join(options.appid, options.channel, options.token || null),
-    AgoraRTC.createMicrophoneAudioTrack()
-  ]);
+  await client.join(options.appid, options.channel, options.token || null, uid),
+
+  localTracks.audioTrack = await AgoraRTC.createMicrophoneAudioTrack()
+
 
   await client.publish(Object.values(localTracks));
 }
@@ -196,6 +198,29 @@ function loop() {
     if (!player.isMuted) {
       canvas.drawImage(megaPhone, player.x - cameraX + 5, player.y - cameraY - 28);
     }
+
+    if (player !== myPlayer) {
+      if (
+        remoteUsers[player.voiceId] &&
+        remoteUsers[player.voiceId].audioTrack
+      ) {
+        const distance = Math.sqrt(
+          (player.x - myPlayer.x) ** 2 + (player.y - myPlayer.y) ** 2
+        );
+        
+        // Calcular o fator multiplicador do volume
+        const maxDistance = 700; // Distância máxima para volume reduzido
+        const volumeMultiplier = Math.max(0, 1 - distance / maxDistance); // Garante que o volumeMultiplier seja entre 0 e 1
+    
+        // Aplicar o fator multiplicador ao volume
+        const baseVolume = 100; // Volume base (máximo)
+        const adjustedVolume = Math.floor(baseVolume * volumeMultiplier);
+    
+        // Definir o volume do áudio do jogador remoto
+        remoteUsers[player.voiceId].audioTrack.setVolume(adjustedVolume);
+      }
+    }
+    
   }
 
   window.requestAnimationFrame(loop);
