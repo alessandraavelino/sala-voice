@@ -15,7 +15,7 @@ canvasEl.width = window.innerWidth;
 canvasEl.height = window.innerHeight;
 const canvas = canvasEl.getContext("2d");
 
-const socket = io("https://sajsadas.onrender.com:5000");
+const socket = io();
 
 const client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" })
 
