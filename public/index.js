@@ -1,15 +1,87 @@
 const mapImage = new Image();
-mapImage.src = "/snowy-sheet.png";
+mapImage.src = "/bloco.png";
+
+const newPiskel = new Image();
+newPiskel.src = "/snowy-sheet.png";
 
 const santaImage = new Image();
 santaImage.src = "/boy.png";
+
+const megaPhone = new Image();
+megaPhone.src = "/megaphone.png";
 
 const canvasEl = document.getElementById("canvas");
 canvasEl.width = window.innerWidth;
 canvasEl.height = window.innerHeight;
 const canvas = canvasEl.getContext("2d");
 
-const socket = io();
+const socket = io(`ws://localhost:5000`);
+
+const client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" })
+
+const localTracks = {
+  audioTrack: null
+}
+
+let isPlaying = true
+
+const remoteUsers = {};
+const muteButton = document.getElementById("mute");
+
+muteButton.addEventListener("click", () => {
+  if (isPlaying) {
+    localTracks.audioTrack.setEnabled(false)
+    muteButton.innerText = 'unmute'
+    socket.emit('mute', true)
+  } else {
+    localTracks.audioTrack.setEnabled(true)
+    muteButton.innerText = 'mute'
+    socket.emit('mute', false)
+  }
+
+  isPlaying = !isPlaying
+})
+
+const options = {
+  appid: "94d21a0f8650491e989caa2a020f988c",
+  channel: 'school',
+  uid: null,
+  token: null
+}
+
+async function subscribe(user, mediaType) {
+  await client.subscribe(user, mediaType);
+  if (mediaType === "audio") {
+    user.audioTrack.play();
+  }
+}
+
+function handleUserPublished(user, mediaType) {
+  const id = user.uid;
+  remoteUsers[id] = user;
+  subscribe(user, mediaType);
+}
+
+function handleUserUnpublished(user) {
+  const id = user.uid;
+  delete remoteUsers[id];
+}
+
+async function join() {
+  //socket.emit("voiceId", uid);
+
+  client.on("user-published", handleUserPublished);
+  client.on("user-unpublished", handleUserUnpublished);
+
+  [options.uid, localTracks.audioTrack] = await Promise.all([
+    client.join(options.appid, options.channel, options.token || null),
+    AgoraRTC.createMicrophoneAudioTrack()
+  ]);
+
+  await client.publish(Object.values(localTracks));
+}
+
+join();
 
 let groundMap = [[]];
 let decalMap = [[]];
@@ -106,7 +178,7 @@ function loop() {
       const imageCol = id % TILES_IN_ROW;
 
       canvas.drawImage(
-        mapImage,
+        newPiskel,
         imageCol * TILE_SIZE,
         imageRow * TILE_SIZE,
         TILE_SIZE,
@@ -121,6 +193,9 @@ function loop() {
 
   for (const player of players) {
     canvas.drawImage(santaImage, player.x - cameraX, player.y - cameraY);
+    if (!player.isMuted) {
+      canvas.drawImage(megaPhone, player.x - cameraX + 5, player.y - cameraY - 28);
+    }
   }
 
   window.requestAnimationFrame(loop);

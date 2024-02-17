@@ -1,14 +1,22 @@
 {
-    "Map/SizeTest": {
-        "height": 4300,
-        "width": 2
-    },
-    "activeFile": "",
+    "activeFile": "map2.tmx",
     "expandedProjectPaths": [
+        "."
     ],
     "fileStates": {
+        "": {
+            "scaleInDock": 1.5
+        },
+        "bloco.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "decal.tsx": {
             "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "escola.tsx": {
+            "scaleInDock": 0.5,
             "scaleInEditor": 1
         },
         "ground.tsx": {
@@ -16,39 +24,78 @@
             "scaleInEditor": 1
         },
         "map.tmx": {
-            "scale": 0.33,
+            "scale": 1,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 839.3939393939393,
-                "y": 1262.121212121212
+                "x": 1001,
+                "y": 665.5
             }
         },
         "map.tmx#decal": {
             "scaleInDock": 1
         },
+        "map2.tmx": {
+            "scale": 0.75,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 477.33333333333337,
+                "y": 459.33333333333326
+            }
+        },
+        "map2.tmx#snowy-sheet": {
+            "scaleInDock": 1
+        },
+        "new_piskel.tsx": {
+            "scaleInDock": 0.75,
+            "scaleInEditor": 1
+        },
+        "pixel.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "school.tsx": {
+            "scaleInDock": 2,
+            "scaleInEditor": 1
+        },
         "snowy-sheet.tsx": {
+            "scaleInDock": 0.75,
+            "scaleInEditor": 1
+        },
+        "tileplanks (2).tsx": {
+            "scaleInDock": 3,
+            "scaleInEditor": 1
+        },
+        "tileplanks.tsx": {
             "scaleInDock": 1,
             "scaleInEditor": 1
         }
     },
     "last.imagePath": "C:/Users/aless/Downloads/sala-voice/public",
-    "map.height": 50,
     "map.lastUsedFormat": "tmx",
-    "map.tileHeight": 16,
-    "map.tileWidth": 16,
-    "map.width": 50,
     "openFiles": [
+        "map2.tmx",
+        "tileplanks.tsx",
+        "snowy-sheet.tsx",
+        "bloco.tsx"
     ],
     "project": "map.tiled-project",
     "recentFiles": [
+        "bloco.tsx",
         "snowy-sheet.tsx",
+        "tileplanks.tsx",
+        "map2.tmx",
+        "tileplanks (2).tsx",
+        "pixel.tsx",
+        "escola.tsx",
+        "school.tsx",
+        "new_piskel.tsx",
         "map.tmx",
         "decal.tsx",
         "ground.tsx"
     ],
     "tileset.lastUsedFormat": "tsx",
     "tileset.tileSize": {
-        "height": 16,
-        "width": 16
+        "height": 32,
+        "width": 32
     }
 }
