@@ -1,5 +1,5 @@
 
-const socket = io();
+const socket = io("https://sala-voice.onrender.com/");
 
 const mapImage = new Image();
 mapImage.src = "/bloco.png";
