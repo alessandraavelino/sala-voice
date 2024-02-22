@@ -1,13 +1,32 @@
 const express = require("express");
 const { Server } = require("socket.io");
+const cors = require("cors");
 
 const app = express();
 
 // Configuração do socket.io
-const httpServer = require("http").createServer(app);
-const io = new Server(httpServer);
+
+
 
 const PORT = process.env.PORT || 5000;
+app.use(cors());
+const httpServer = require("http").createServer(app);
+
+const io = new Server(httpServer, {
+  // http://localhost:3000
+  // `https://multiplayer-chess-site.onrender.com`
+  cors: {
+    origins: `https://sajsadas.onrender.com/`,
+
+    // location of frontend (need to somehow specify port to render so that this code works)
+    // I might be able just pass the render site link
+    // I also forgot to add socket.io connect link to frontend in chessGame which is probably why I received an error
+    methods: ["GET", "POST"],
+  },
+  pingInterval: 2000,
+  pingTimeout: 10000,
+});
+
 
 const loadMap = require("./mapLoader");
 
