@@ -5,14 +5,6 @@ const { Server } = require("socket.io");
 const app = express();
 const httpServer = createServer(app);
 
-app.get("/socket.io/socket.io.js", (req, res) => {
-  res.sendFile(__dirname + "/node_modules/socket.io-client/dist/socket.io.js", {
-    // Definindo o tipo MIME para application/javascript
-    headers: {
-      "Content-Type": "application/javascript",
-    },
-  });
-});
 
 const io = new Server(httpServer);
 
