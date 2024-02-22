@@ -1,5 +1,5 @@
 
-const socket = io("wss://sajsadas.onrender.com");
+const socket = io();
 
 const mapImage = new Image();
 mapImage.src = "/bloco.png";
