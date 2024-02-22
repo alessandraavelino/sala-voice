@@ -1,11 +1,10 @@
 const express = require("express");
-const { createServer } = require("http");
 const { Server } = require("socket.io");
 
 const app = express();
-const httpServer = createServer(app);
 
-
+// Configuração do socket.io
+const httpServer = require("http").createServer(app);
 const io = new Server(httpServer);
 
 const PORT = process.env.PORT || 5000;
@@ -138,9 +137,6 @@ async function main() {
 
   app.use(express.static("public"));
 
-  httpServer.listen(PORT, () => {
-    console.log(`Servidor está ouvindo na porta ${PORT}`);
-});
 
   let lastUpdate = Date.now();
   setInterval(() => {
@@ -151,4 +147,10 @@ async function main() {
   }, 1000 / TICK_RATE);
 }
 
+
+
 main();
+
+httpServer.listen(PORT, () => {
+  console.log(`Servidor está ouvindo na porta ${PORT}`);
+});
