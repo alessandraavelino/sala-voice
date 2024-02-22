@@ -1,3 +1,6 @@
+
+const socket = io();
+
 const mapImage = new Image();
 mapImage.src = "/bloco.png";
 
@@ -14,8 +17,6 @@ const canvasEl = document.getElementById("canvas");
 canvasEl.width = window.innerWidth;
 canvasEl.height = window.innerHeight;
 const canvas = canvasEl.getContext("2d");
-
-const socket = io();
 
 const client = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" })
 
