@@ -1,5 +1,5 @@
 
-const socket = io("https://sala-voice.onrender.com/");
+const socket = io();
 
 const mapImage = new Image();
 mapImage.src = "/bloco.png";
@@ -12,6 +12,9 @@ santaImage.src = "/boy.png";
 
 const megaPhone = new Image();
 megaPhone.src = "/megaphone.png";
+
+const teste = new Image();
+teste.src = "/teste.png";
 
 const canvasEl = document.getElementById("canvas");
 canvasEl.width = window.innerWidth;
@@ -89,6 +92,7 @@ join();
 let groundMap = [[]];
 let decalMap = [[]];
 let players = [];
+let school = [[]];
 
 const TILE_SIZE = 32;
 
@@ -113,15 +117,39 @@ const inputs = {
   right: false,
 };
 
+let direcaoAtual = ''; // Variável para armazenar a direção atual
+let ultimaDirecao = ''; // Variável para armazenar a última direção de movimento
+
+const walkingFrames = {
+  up: [],
+  down: [],
+  left: [],
+  right: []
+};
+
+// Carregar as imagens para a animação de andar em todas as direções
+for (let direction in walkingFrames) {
+  for (let i = 1; i <= 3; i++) {
+      let frame = new Image();
+      frame.src = `./boy_walk_${direction}_${i}.png`;
+      walkingFrames[direction].push(frame);
+  }
+}
+
 window.addEventListener("keydown", (e) => {
   if (e.key === "w") {
     inputs["up"] = true;
+    ultimaDirecao = 'up';
   } else if (e.key === "s") {
     inputs["down"] = true;
+    ultimaDirecao = 'down';
   } else if (e.key === "d") {
     inputs["right"] = true;
+    ultimaDirecao = 'right';
+    santaImage.src = './boy_walk_right_1.png'
   } else if (e.key === "a") {
     inputs["left"] = true;
+    ultimaDirecao = 'left';
   }
   socket.emit("inputs", inputs);
 });
@@ -181,7 +209,7 @@ function loop() {
       const imageCol = id % TILES_IN_ROW;
 
       canvas.drawImage(
-        newPiskel,
+        teste,
         imageCol * TILE_SIZE,
         imageRow * TILE_SIZE,
         TILE_SIZE,
@@ -193,10 +221,46 @@ function loop() {
       );
     }
   }
+  
 
   for (const player of players) {
-    canvas.drawImage(santaImage, player.x - cameraX, player.y - cameraY);
-    if (!player.isMuted) {
+    // Se nenhum botão estiver pressionado, use a última direção de movimento
+    if (!inputs["up"] && !inputs["down"] && !inputs["left"] && !inputs["right"]) {
+        direcaoAtual = ultimaDirecao;
+    } else {
+        // Verifique a direção do jogador e defina a direção atual corretamente
+        if (inputs["up"]) {
+            direcaoAtual = 'up';
+        } else if (inputs["down"]) {
+            direcaoAtual = 'down';
+        } else if (inputs["left"]) {
+            direcaoAtual = 'left';
+        } else if (inputs["right"]) {
+            direcaoAtual = 'right';
+        }
+    }
+
+    let walkingFramesIndex = 0;
+
+    // Verifica se o jogador está se movendo para alternar entre os quadros de animação
+    // Verifica se walkingFrames[direcaoAtual] está definido antes de acessá-lo
+  if (walkingFrames[direcaoAtual] !== undefined) {
+    let walkingFramesIndex = 0;
+
+    // Verifica se o jogador está se movendo para alternar entre os quadros de animação
+    if (inputs["up"] || inputs["down"] || inputs["left"] || inputs["right"]) {
+        walkingFramesIndex = Math.floor(Date.now() / 100) % walkingFrames[direcaoAtual].length;
+    }
+
+    canvas.drawImage(walkingFrames[direcaoAtual][walkingFramesIndex], player.x - cameraX, player.y - cameraY);
+  }
+
+
+    
+  
+  
+  
+  if (!player.isMuted) {
       canvas.drawImage(megaPhone, player.x - cameraX + 5, player.y - cameraY - 28);
     }
 
