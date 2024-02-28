@@ -222,40 +222,35 @@ function loop() {
     }
   }
   
+  
 
   for (const player of players) {
-    // Se nenhum botão estiver pressionado, use a última direção de movimento
-    if (!inputs["up"] && !inputs["down"] && !inputs["left"] && !inputs["right"]) {
-        direcaoAtual = ultimaDirecao;
+    let direcaoAtual = ultimaDirecao || 'up';
+    let walkingFramesIndex = 0;
+
+    if (inputs["up"]) {
+      direcaoAtual = 'up';
+    } else if (inputs["down"]) {
+        direcaoAtual = 'down';
+    } else if (inputs["left"]) {
+        direcaoAtual = 'left';
+    } else if (inputs["right"]) {
+        direcaoAtual = 'right';
     } else {
-        // Verifique a direção do jogador e defina a direção atual corretamente
-        if (inputs["up"]) {
-            direcaoAtual = 'up';
-        } else if (inputs["down"]) {
-            direcaoAtual = 'down';
-        } else if (inputs["left"]) {
-            direcaoAtual = 'left';
-        } else if (inputs["right"]) {
-            direcaoAtual = 'right';
-        }
+      direcaoAtual = ultimaDirecao
+      
     }
 
-    let walkingFramesIndex = 0;
+    
 
-    // Verifica se o jogador está se movendo para alternar entre os quadros de animação
-    // Verifica se walkingFrames[direcaoAtual] está definido antes de acessá-lo
-  if (walkingFrames[direcaoAtual] !== undefined) {
-    let walkingFramesIndex = 0;
-
-    // Verifica se o jogador está se movendo para alternar entre os quadros de animação
-    if (inputs["up"] || inputs["down"] || inputs["left"] || inputs["right"]) {
+    if (walkingFrames[direcaoAtual] !== undefined) {
+      // Verifica se o jogador está se movendo para alternar entre os quadros de animação
+      if (inputs["up"] || inputs["down"] || inputs["left"] || inputs["right"]) {
         walkingFramesIndex = Math.floor(Date.now() / 100) % walkingFrames[direcaoAtual].length;
+      }
+
+      canvas.drawImage(walkingFrames[direcaoAtual][walkingFramesIndex], player.x - cameraX, player.y - cameraY);
     }
-
-    canvas.drawImage(walkingFrames[direcaoAtual][walkingFramesIndex], player.x - cameraX, player.y - cameraY);
-  }
-
-
     
   
   
