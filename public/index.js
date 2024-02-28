@@ -118,7 +118,7 @@ const inputs = {
 };
 
 let direcaoAtual = ''; // Variável para armazenar a direção atual
-let ultimaDirecao = ''; // Variável para armazenar a última direção de movimento
+let ultimaDirecao = 'down'; // Variável para armazenar a última direção de movimento
 
 const walkingFrames = {
   up: [],
